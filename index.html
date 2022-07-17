@@ -9,10 +9,30 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
-<body>
-    
+<body class="overflow-hidden">
+    <header class="bg-info pb-2">
+        <h1 class="text-center text-light">Weather Dashboard</h1>
+    </header>
+
+    <main class="row ml-1 mt-2">
+        <div class="col-3">
+            <h2 class="text-center font-weight-bold">Search for a City:</h2>
+            <form id="city-form">
+                <input name="city-input" id="city-input" type="text" autofocus="true" placeholder="San Diego" class="form-input mb-2" />
+                <button type="submit" class="btn btn-primary btn-block">Search</button>
+            </form>
+            <div id="city-history">
+
+            </div>
+        </div>
+        <div class="col-9">
+
+        </div>
+    </main>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="./assets/js/script.js"></script>
+
 </body>
 </html>
