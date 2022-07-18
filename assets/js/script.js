@@ -1,5 +1,5 @@
 var forecastContainerEl = $("#forecast-container");
-var apiKey = "acee1f8a8e646c6fc810eb87712fea4f";
+var apiKey = "52ddee8b9cafd9b6965728682363181a";
 var currentCity;
 var cityWeather;
 
@@ -26,10 +26,14 @@ var getCurrentWeather = function() {
 
             displayTodaysWeather();
 
-            console.log(cityWeather);
+            getFutureWeather();
         })
     })
 };
+
+var getFutureWeather = function() {
+    displayFutureWeather();
+}
 
 var displayTodaysWeather = function() {
     var forecastToday = $("<div></div>");
@@ -62,6 +66,28 @@ var displayTodaysWeather = function() {
     forecastToday.append(windSpan);
     forecastToday.append(humidSpan);
     forecastContainerEl.append(forecastToday);
+}
+
+var displayFutureWeather = function() {
+    var futureContainer = $("<div></div");
+    
+    var fiveDayHeader = $("<h4></h4>");
+    fiveDayHeader.text("5-day Forecast");
+
+    var futureWeatherContainer = $("<div></div>");
+    futureWeatherContainer.addClass("d-flex justify-content-between");
+
+    for(var i = 0; i < 5; i++) {
+        var forecastDiv = $("<div></div>");
+        forecastDiv.addClass("bg-info");
+
+        futureWeatherContainer.append(forecastDiv);
+    }
+
+    futureContainer.append(fiveDayHeader);
+    futureContainer.append(futureWeatherContainer);
+
+    forecastContainerEl.append(futureContainer);
 }
 
 getCityCoordinates();
