@@ -8,6 +8,9 @@ var cityWeather;
 var futureWeather = [];
 var searchHistory = [];
 
+
+// The api needs coordinates to get weather information.
+// This function will call the geocoding url and get an objects with coordinates for the searched city.
 var getCityCoordinates = function(city) {
     var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&appid=" + apiKey;
     
@@ -37,6 +40,7 @@ var getCityCoordinates = function(city) {
     })
 };
 
+// Gives a weather object to the cityWeather variable.
 var getCurrentWeather = function() {
     var apiUrl = "https://api.openweathermap.org/data/2.5/weather?lat=" + currentCity.lat + "&lon=" + currentCity.lon + "&units=imperial&appid=" + apiKey;
 
@@ -51,6 +55,7 @@ var getCurrentWeather = function() {
     })
 };
 
+// Gets an array of weather objects and puts them in the futureWeather variable.
 var getFutureWeather = function() {
     var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=" + currentCity.lat + "&lon=" + currentCity.lon + "&units=imperial&appid=" + apiKey;
     
@@ -62,6 +67,8 @@ var getFutureWeather = function() {
     });
 };
 
+// Creates a container and displays the current weather information.
+// The assignment called for UV index with variable color, but the api we used doesn't seem to provide that information.
 var displayTodaysWeather = function() {
     var forecastToday = $("<div></div>");
     forecastToday.addClass("border border-dark");
@@ -95,6 +102,8 @@ var displayTodaysWeather = function() {
     forecastContainerEl.append(forecastToday);
 };
 
+// Creates a series of containers that will display the weather for the next five days.
+// Since the array is for every three hours, every eigth element is called to guarantee twenty-four hours between each div.
 var displayFutureWeather = function() {
     var futureContainer = $("<div></div");
     
@@ -145,6 +154,7 @@ var displayFutureWeather = function() {
 
 };
 
+// Takes the value in cityInputEl and uses it as a search term for the api.
 var submitCity = function(event) {
     if(cityInputEl.val()) {
         city = cityInputEl.val();
@@ -155,6 +165,7 @@ var submitCity = function(event) {
     }
 };
 
+// Takes a history button and makes a search with its text content
 var submitCityBtn = function(event) {
     if(event.target.classList.contains("history-btn")) {
         city = event.target.textContent;
@@ -164,6 +175,7 @@ var submitCityBtn = function(event) {
     }
 };
 
+// When the user makes a search with the input button, the search term is added to the history array and local storage.
 var saveSearch = function(city) {
     if(searchHistory.length > 6) {
         searchHistory.shift();
@@ -173,32 +185,34 @@ var saveSearch = function(city) {
     localStorage.setItem("history", JSON.stringify(searchHistory));
 };
 
+// Loads the history in local storage and adds a series of buttons for each history item
 var loadHistory = function() {
     searchHistory = JSON.parse(localStorage.getItem("history"));
-    while(searchHistory.length > 6) {
-        searchHistory.shift();
+
+    if(searchHistory) {
+        while(searchHistory.length > 6) {
+            searchHistory.shift();
+        }
+
+        var historyContainer = $("<div></div>")
+            .addClass("border-top border-dark mt-3 pt-2");
+        
+        for(var i = 0; i < searchHistory.length; i++) {
+            var historyBtn = $("<button></button>")
+                .addClass("btn btn-secondary btn-block shadow history-btn")
+                .text(searchHistory[i]);
+
+            historyContainer.append(historyBtn);
+        }
+
+        searchContainerEl.append(historyContainer);
     }
-
-    var historyContainer = $("<div></div>")
-        .addClass("border-top border-dark mt-3 pt-2");
-    
-    for(var i = 0; i < searchHistory.length; i++) {
-        var historyBtn = $("<button></button>")
-            .addClass("btn btn-secondary btn-block shadow history-btn")
-            .text(searchHistory[i]);
-
-        historyContainer.append(historyBtn);
+    else {
+        searchHistory = [];
     }
-
-    searchContainerEl.append(historyContainer);
 };
 
-var removeChildren = function() {
-    while(forecastContainerEl.firstChild) {
-        forecastContainerEl.removeChild(forecastContainerEl.firstChild);
-    }
-};
-
+// Gives the user an error message if the api call failed.
 var displayError = function(error) {
     var errorDiv = $("<div></div>")
     if(error === "not found") {
