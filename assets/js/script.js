@@ -1,6 +1,7 @@
 var forecastContainerEl = $("#forecast-container");
 var cityBtnEl = $("#city-btn");
 var cityInputEl = $("#city-input");
+var searchContainerEl = $("#search-container");
 var apiKey = "52ddee8b9cafd9b6965728682363181a";
 var currentCity;
 var cityWeather;
@@ -11,13 +12,28 @@ var getCityCoordinates = function(city) {
     var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&appid=" + apiKey;
     
     fetch(apiUrl).then(function(response) {
-        response.json().then(function(data) {
-            currentCity = data[0];
+        if(response.ok) {
+            response.json().then(function(data) {
+                currentCity = data[0];
 
-            console.log(currentCity);
-
-            getCurrentWeather();
-        })
+                if(currentCity) {
+                    getCurrentWeather();
+                }
+                else {
+                    displayError("not found");
+                    return;
+                }
+                
+            })
+        }
+        else {
+            displayError("not found");
+            return;
+        }
+    })
+    .catch(function(error) {
+        displayError("couldn't reach");
+        return;
     })
 };
 
@@ -44,7 +60,7 @@ var getFutureWeather = function() {
             displayFutureWeather();
         })
     });
-}
+};
 
 var displayTodaysWeather = function() {
     var forecastToday = $("<div></div>");
@@ -77,7 +93,7 @@ var displayTodaysWeather = function() {
     forecastToday.append(windSpan);
     forecastToday.append(humidSpan);
     forecastContainerEl.append(forecastToday);
-}
+};
 
 var displayFutureWeather = function() {
     var futureContainer = $("<div></div");
@@ -139,8 +155,17 @@ var submitCity = function(event) {
     }
 };
 
+var submitCityBtn = function(event) {
+    if(event.target.classList.contains("history-btn")) {
+        city = event.target.textContent;
+        forecastContainerEl.empty();
+
+        getCityCoordinates(city);
+    }
+};
+
 var saveSearch = function(city) {
-    if(searchHistory > 6) {
+    if(searchHistory.length > 6) {
         searchHistory.shift();
     }
     searchHistory.push(city);
@@ -150,6 +175,21 @@ var saveSearch = function(city) {
 
 var loadHistory = function() {
     searchHistory = JSON.parse(localStorage.getItem("history"));
+    while(searchHistory.length > 6) {
+        searchHistory.shift();
+    }
+
+    var historyContainer = $("<div></div>");
+    
+    for(var i = 0; i < searchHistory.length; i++) {
+        var historyBtn = $("<button></button>")
+            .addClass("btn btn-light btn-block shadow history-btn")
+            .text(searchHistory[i]);
+
+        historyContainer.append(historyBtn);
+    }
+
+    searchContainerEl.append(historyContainer);
 };
 
 var removeChildren = function() {
@@ -158,6 +198,19 @@ var removeChildren = function() {
     }
 };
 
+var displayError = function(error) {
+    var errorDiv = $("<div></div>")
+    if(error === "not found") {
+        errorDiv.text("We couldn't find that city. Please try again.");
+    }
+    else if (error === "couldn't reach") {
+        errorDiv.text("OpenWeather service couldn't be reached. Please try again.");
+    }
+
+    forecastContainerEl.append(errorDiv);
+};
+
 loadHistory();
 
 cityBtnEl.on("click", submitCity);
+searchContainerEl.on("click", submitCityBtn);
