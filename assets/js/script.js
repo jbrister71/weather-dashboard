@@ -1,7 +1,9 @@
 var forecastContainerEl = $("#forecast-container");
+var cityInputEl = $("#city-input");
 var apiKey = "52ddee8b9cafd9b6965728682363181a";
 var currentCity;
 var cityWeather;
+var futureWeather = [];
 
 var getCityCoordinates = function() {
     var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q=Orlando&appid=" + apiKey;
@@ -32,7 +34,14 @@ var getCurrentWeather = function() {
 };
 
 var getFutureWeather = function() {
-    displayFutureWeather();
+    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=" + currentCity.lat + "&lon=" + currentCity.lon + "&units=imperial&appid=" + apiKey;
+    
+    fetch(apiUrl).then(function(response) {
+        response.json().then(function(data) {
+            futureWeather = data.list;
+            displayFutureWeather();
+        })
+    });
 }
 
 var displayTodaysWeather = function() {
@@ -58,7 +67,7 @@ var displayTodaysWeather = function() {
 
     var humidSpan = $("<div></div>");
     humidSpan.addClass("mb-3 ml-2");
-    humidSpan.text("Humidity: " + cityWeather.main.humidity + " %");
+    humidSpan.text("Humidity: " + cityWeather.main.humidity + "%");
 
     dateAndWeather.append(weatherImg);
     forecastToday.append(dateAndWeather);
@@ -72,15 +81,42 @@ var displayFutureWeather = function() {
     var futureContainer = $("<div></div");
     
     var fiveDayHeader = $("<h4></h4>");
+    fiveDayHeader.addClass("pt-2");
     fiveDayHeader.text("5-day Forecast");
 
     var futureWeatherContainer = $("<div></div>");
     futureWeatherContainer.addClass("d-flex justify-content-between");
 
-    for(var i = 0; i < 5; i++) {
+    for(var i = 7; i < 40; i += 8) {
         var forecastDiv = $("<div></div>");
-        forecastDiv.addClass("bg-info");
+        forecastDiv.addClass("bg-info pl-1 pr-3");
 
+        console.log(futureWeather);
+        date = moment(futureWeather[i].dt * 1000).format("MM/DD/YYYY");
+
+        var futureWeatherDate = $("<h5></h5>").text(date);
+
+        var futureWeatherIcon = $("<img></img>");
+        var imgUrl = "http://openweathermap.org/img/wn/" + futureWeather[i].weather[0].icon + ".png";
+        futureWeatherIcon.attr("src", imgUrl);
+
+        var temperatureSpan = $("<div></div>")
+            .addClass("mb-1")
+            .text("Temp: " + futureWeather[i].main.temp + "°F");
+
+        var windSpan = $("<div></div>")
+            .addClass("mb-1")
+            .text("Wind: " + futureWeather[i].wind.speed + " MPH");
+
+        var humidSpan = $("<div></div>")
+            .addClass("mb-3")
+            .text("Humidity: " + futureWeather[i].main.humidity + "%");
+
+        forecastDiv.append(futureWeatherDate);
+        forecastDiv.append(futureWeatherIcon);
+        forecastDiv.append(temperatureSpan);
+        forecastDiv.append(windSpan);
+        forecastDiv.append(humidSpan);
         futureWeatherContainer.append(forecastDiv);
     }
 
@@ -88,6 +124,11 @@ var displayFutureWeather = function() {
     futureContainer.append(futureWeatherContainer);
 
     forecastContainerEl.append(futureContainer);
+
+};
+
+var submitCity = function(event) {
+    event.preventDefault();
 }
 
-getCityCoordinates();
+cityInputEl.submit(submitCity);
