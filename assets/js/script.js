@@ -107,7 +107,7 @@ var displayFutureWeather = function() {
 
     for(var i = 7; i < 40; i += 8) {
         var forecastDiv = $("<div></div>");
-        forecastDiv.addClass("bg-info pl-1 pr-3");
+        forecastDiv.addClass("bg-primary pl-1 pr-3 shadow text-light");
 
         console.log(futureWeather);
         date = moment(futureWeather[i].dt * 1000).format("MM/DD/YYYY");
@@ -179,11 +179,12 @@ var loadHistory = function() {
         searchHistory.shift();
     }
 
-    var historyContainer = $("<div></div>");
+    var historyContainer = $("<div></div>")
+        .addClass("border-top border-dark mt-3 pt-2");
     
     for(var i = 0; i < searchHistory.length; i++) {
         var historyBtn = $("<button></button>")
-            .addClass("btn btn-light btn-block shadow history-btn")
+            .addClass("btn btn-secondary btn-block shadow history-btn")
             .text(searchHistory[i]);
 
         historyContainer.append(historyBtn);
