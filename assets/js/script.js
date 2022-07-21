@@ -1,12 +1,14 @@
 var forecastContainerEl = $("#forecast-container");
+var cityBtnEl = $("#city-btn");
 var cityInputEl = $("#city-input");
 var apiKey = "52ddee8b9cafd9b6965728682363181a";
 var currentCity;
 var cityWeather;
 var futureWeather = [];
+var searchHistory = [];
 
-var getCityCoordinates = function() {
-    var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q=Orlando&appid=" + apiKey;
+var getCityCoordinates = function(city) {
+    var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&appid=" + apiKey;
     
     fetch(apiUrl).then(function(response) {
         response.json().then(function(data) {
@@ -128,7 +130,34 @@ var displayFutureWeather = function() {
 };
 
 var submitCity = function(event) {
-    event.preventDefault();
-}
+    if(cityInputEl.val()) {
+        city = cityInputEl.val();
+        forecastContainerEl.empty();
+        saveSearch(city);
 
-cityInputEl.submit(submitCity);
+        getCityCoordinates(city);
+    }
+};
+
+var saveSearch = function(city) {
+    if(searchHistory > 6) {
+        searchHistory.shift();
+    }
+    searchHistory.push(city);
+
+    localStorage.setItem("history", JSON.stringify(searchHistory));
+};
+
+var loadHistory = function() {
+    searchHistory = JSON.parse(localStorage.getItem("history"));
+};
+
+var removeChildren = function() {
+    while(forecastContainerEl.firstChild) {
+        forecastContainerEl.removeChild(forecastContainerEl.firstChild);
+    }
+};
+
+loadHistory();
+
+cityBtnEl.on("click", submitCity);
