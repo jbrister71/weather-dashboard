@@ -118,7 +118,6 @@ var displayFutureWeather = function() {
         var forecastDiv = $("<div></div>");
         forecastDiv.addClass("bg-primary pl-1 pr-3 shadow text-light");
 
-        console.log(futureWeather);
         date = moment(futureWeather[i].dt * 1000).format("MM/DD/YYYY");
 
         var futureWeatherDate = $("<h5></h5>").text(date);
