@@ -123,7 +123,7 @@ var displayFutureWeather = function() {
         var futureWeatherDate = $("<h5></h5>").text(date);
 
         var futureWeatherIcon = $("<img></img>");
-        var imgUrl = "http://openweathermap.org/img/wn/" + futureWeather[i].weather[0].icon + ".png";
+        var imgUrl = "https://openweathermap.org/img/wn/" + futureWeather[i].weather[0].icon + ".png";
         futureWeatherIcon.attr("src", imgUrl);
 
         var temperatureSpan = $("<div></div>")
