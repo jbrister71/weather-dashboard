@@ -12,7 +12,7 @@ var searchHistory = [];
 // The api needs coordinates to get weather information.
 // This function will call the geocoding url and get an objects with coordinates for the searched city.
 var getCityCoordinates = function(city) {
-    var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&appid=" + apiKey;
+    var apiUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&appid=" + apiKey;
     
     fetch(apiUrl).then(function(response) {
         if(response.ok) {
@@ -79,7 +79,7 @@ var displayTodaysWeather = function() {
     dateAndWeather.addClass("ml-2");
 
     var weatherImg = $("<img></img>");
-    var imgUrl = "http://openweathermap.org/img/wn/" + cityWeather.weather[0].icon + ".png";
+    var imgUrl = "https://openweathermap.org/img/wn/" + cityWeather.weather[0].icon + ".png";
     weatherImg.attr("src", imgUrl);
 
     var temperatureSpan = $("<div></div>");
