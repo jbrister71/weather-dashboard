@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body class="overflow-hidden ml-1 mr-1">
+    <header class="bg-info pb-2">
+        <h1 class="text-center text-light">Weather Dashboard</h1>
+    </header>
+
+    <main class="row ml-1 mt-2">
+        <div class="col-3" id="search-container">
+            <h2 class="text-center font-weight-bold">Search for a City:</h2>
+            <form id="city-form">
+                <input name="city-input" id="city-input" type="text" autofocus="true" placeholder="San Diego" class="form-input mb-2" />
+                <button type="button" class="btn btn-primary btn-block shadow" id="city-btn">Search</button>
+            </form>
+            <div id="city-history">
+
+            </div>
+        </div>
+        <div class="col-9" id="forecast-container">
+
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="./assets/js/script.js"></script>
+
+</body>
+</html>
